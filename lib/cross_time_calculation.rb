@@ -19,18 +19,20 @@ class CrossTimeCalculation
 
     # insert it and sort
     self.time_points += [tb, te]
-    self.time_points = self.time_points.sort {|a, b| a.t <=> b.t }
+    self.time_points = self.time_points.uniq {|i| "#{i.t}#{i.status}" }.sort {|a, b| a.t <=> b.t }
 
     # TODO optimize search with idx
     loop do
+      to_removes = []
       self.time_points.each_with_index do |tp, idx|
         post_tp = self.time_points[idx+1]
         next if post_tp.nil?
         # delete the first one if they are all finished_at
-        self.time_points.delete tp if (tp.status == :finished_at) && (post_tp.status == :finished_at)
+        to_removes << tp if (tp.status == :finished_at) && (post_tp.status == :finished_at)
         # delete the later one if they are all started_at
-        self.time_points.delete post_tp if (tp.status == :started_at) && (post_tp.status == :started_at)
+        to_removes << post_tp if (tp.status == :started_at) && (post_tp.status == :started_at)
       end
+      self.time_points -= to_removes
 
       break if (self.time_points.size % 2).zero?
     end

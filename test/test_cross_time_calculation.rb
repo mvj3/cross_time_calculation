@@ -43,20 +43,29 @@ class TestCrossTimeCalculation < Test::Unit::TestCase
   end
 
   def test_more_time_points_with_cross
+    assert_equal load_more_time_points, true
+  end
+
+  def test_dup_time_points_with_cross
+    assert_equal load_more_time_points(true), true
+  end
+
+  private
+  def load_more_time_points dup = false
     @ctc.add @t3, @t4
     @ctc.add @t5, @t6
     @ctc.add @t7, @t8
+    @ctc.add @t7, @t8 if dup
 
     # user array to count appeared second
     @seconds = []
-    [[@t1, @t2], [@t3, @t4], [@t5, @t6], [@t7, @t8]].each do |tb, te|
+    [[@t1, @t2], [@t3, @t4], [@t5, @t6], [@t7, @t8], (dup ? [@t7, @t8] : nil)].compact.each do |tb, te|
+      next if tb.nil?
       new_idx = tb - @t1
       (te-tb).to_i.times {|idx| @seconds[new_idx+idx] = 1 }
     end
 
-    compare = (@seconds.count(1) - @ctc.total_seconds).abs < 3
-
-    assert_equal compare, true
+    (@seconds.count(1) - @ctc.total_seconds).abs < 3
   end
 
 end

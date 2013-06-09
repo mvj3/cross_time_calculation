@@ -22,17 +22,17 @@ class CrossTimeCalculation
     self.time_points = self.time_points.sort {|a, b| a.t <=> b.t }
 
     # TODO optimize search with idx
-    self.time_points.each_with_index do |tp, idx|
-      # skip the first TimePoint
-      if not idx.zero?
+    loop do
+      self.time_points.each_with_index do |tp, idx|
         post_tp = self.time_points[idx+1]
-        # skip the last TimePoint
         next if post_tp.nil?
-        # delete the later one if they are all started_at
-        self.time_points.delete post_tp if (tp.status == :started_at) && (post_tp.status == :started_at)
         # delete the first one if they are all finished_at
         self.time_points.delete tp if (tp.status == :finished_at) && (post_tp.status == :finished_at)
+        # delete the later one if they are all started_at
+        self.time_points.delete post_tp if (tp.status == :started_at) && (post_tp.status == :started_at)
       end
+
+      break if (self.time_points.size % 2).zero?
     end
 
     return self

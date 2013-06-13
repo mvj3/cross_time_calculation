@@ -14,8 +14,8 @@ class CrossTimeCalculation
     te = TimePoint.new(time_begin_and_end[1], :finished_at)
 
     # validate data
-    raise "At least the begin time should exist" if not tb
-    raise "The begin time should not larger than the end time" if tb.t > te.t
+    raise "At least the begin time should exist" if not tb.t
+    raise "The begin time should not larger than the end time" if te.t && (tb.t > te.t)
 
     # insert it and sort
     self.time_points += [tb, te]

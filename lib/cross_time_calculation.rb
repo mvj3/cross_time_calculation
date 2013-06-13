@@ -9,13 +9,13 @@ class CrossTimeCalculation
   end
 
   def add *time_begin_and_end
-    # validate data
-    raise "The begin and end time all should exist" if time_begin_and_end.size != 2
-    raise "The begin time should not larger than the end time" if time_begin_and_end[0] > time_begin_and_end[1]
-
     # init TimePoint pair
     tb = TimePoint.new(time_begin_and_end[0], :started_at)
     te = TimePoint.new(time_begin_and_end[1], :finished_at)
+
+    # validate data
+    raise "At least the begin time should exist" if not tb
+    raise "The begin time should not larger than the end time" if tb.t > te.t
 
     # insert it and sort
     self.time_points += [tb, te]
@@ -34,7 +34,7 @@ class CrossTimeCalculation
       end
       self.time_points -= to_removes
 
-      break if (self.time_points.size % 2).zero?
+      break if data_valid?
     end
 
     return self
@@ -46,6 +46,15 @@ class CrossTimeCalculation
       result += (a[1].t - a[0].t)
     end
     result
+  end
+
+  # start time and end time interval is supposed to exist
+  def data_valid?
+    valids = []
+    self.time_points.each_slice(2) do |tp_start, tp_finish|
+      valids << (tp_start.status != tp_finish.status)
+    end
+    valids.count(false).zero?
   end
 
 end

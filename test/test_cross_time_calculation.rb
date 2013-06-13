@@ -30,6 +30,12 @@ class TestCrossTimeCalculation < Test::Unit::TestCase
     assert_equal CrossTimeCalculation.new.total_seconds, 0
   end
 
+  def test_no_time_end
+    assert_nothing_raised do
+      @ctc.add Time.now
+    end
+  end
+
   def test_one_time_point
     assert_equal @ctc.total_seconds, 33
   end

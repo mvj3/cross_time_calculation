@@ -19,7 +19,7 @@ class CrossTimeCalculation
 
     # insert it and sort
     self.time_points += [tb, te]
-    self.time_points = self.time_points.uniq {|i| "#{i.t}#{i.status}" }.sort {|a, b| a.t <=> b.t }
+    self.time_points = self.time_points.uniq {|i| "#{i.t}#{i.status}" }.sort {|a, b| a.t.to_i <=> b.t.to_i }
 
     # TODO optimize search with idx
     loop do

@@ -1,7 +1,7 @@
 # encoding: UTF-8
 
 class CrossTimeCalculation
-  TimePoint = Struct.new(:t, :status)
+  TimePoint = Struct.new(:t, :status) if not defined? TimePoint
   attr_accessor :time_points
 
   def initialize
@@ -18,7 +18,8 @@ class CrossTimeCalculation
     raise "The begin time should not larger than the end time" if te.t && (tb.t > te.t)
 
     # insert it and sort
-    self.time_points += [tb, te]
+    self.time_points << tb
+    self.time_points << te if te.t
     self.time_points = self.time_points.uniq {|i| "#{i.t}#{i.status}" }.sort {|a, b| a.t.to_i <=> b.t.to_i }
 
     # TODO optimize search with idx
@@ -43,8 +44,11 @@ class CrossTimeCalculation
   def total_seconds
     result = 0
     self.time_points.each_slice(2) do |a|
-      end_time = a[1].nil? ? Time.now : a[1].t
-      result += (end_time - a[0].t)
+      end_time = a[1] ? a[1].t : Time.now
+      if a[0].t
+        t = (end_time - a[0].t)
+        result += t
+      end
     end
     result
   end
@@ -53,6 +57,7 @@ class CrossTimeCalculation
   def data_valid?
     valids = []
     self.time_points.each_slice(2) do |tp_start, tp_finish|
+      next if tp_finish.nil?
       valids << (tp_start.status != tp_finish.status)
     end
     valids.count(false).zero?

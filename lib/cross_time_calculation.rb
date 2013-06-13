@@ -43,7 +43,8 @@ class CrossTimeCalculation
   def total_seconds
     result = 0
     self.time_points.each_slice(2) do |a|
-      result += (a[1].t - a[0].t)
+      end_time = a[1].nil? ? Time.now : a[1].t
+      result += (end_time - a[0].t)
     end
     result
   end

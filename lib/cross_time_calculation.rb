@@ -45,7 +45,7 @@ class CrossTimeCalculation
     result = 0
     self.time_points.each_slice(2) do |a|
       end_time = a[1] ? a[1].t : Time.now
-      if a[0].t
+      if a[0] && a[0].t
         t = (end_time - a[0].t)
         result += t
       end

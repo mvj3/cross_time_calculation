@@ -5,7 +5,7 @@ Gem::Specification.new do |s|
   s.version     = File.read("VERSION").strip
   s.date        = '2013-06-09'
   s.summary     = "Cross Time calculation"
-  s.description = s.summary
+  s.description = File.read("README.markdown").split("\n\n")[0].split(/====+/)[1].strip
   s.authors     = ["David Chen"]
   s.email       = 'mvjome@gmail.com'
   s.homepage    = 'http://github.com/mvj3/cross_time_calculation'

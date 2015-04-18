@@ -1,4 +1,4 @@
-Cross Time calculation
+Cross Time calculation [![Build Status](https://travis-ci.org/mvj3/cross_time_calculation.png)](https://travis-ci.org/mvj3/cross_time_calculation)
 ==================================================
 If you want to compute the same user's online time from server log, who comes from multiple clients, so you need to remove duplicate parts.
 
